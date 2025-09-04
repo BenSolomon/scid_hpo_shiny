@@ -6,15 +6,11 @@ ui <- fluidPage(
   # Application title
   titlePanel("HPO UMAP Projections"),
   
+  includeCSS("www/custom.css"),
+  
   # Sidebar with a slider input for number of bins 
   sidebarLayout(
-    sidebarPanel(
-      selectInput("projection",
-                  "Projection:",
-                  choices = c("All ClinGen" = "all", 
-                              "Immunology CDWG" = "immunology", 
-                              "SCID-CID GCEP" = "scid"),
-                  selected = "all"),
+    sidebarPanel(width = 3, 
       selectInput("annotation",
                   "Annotate by:",
                   choices = c("None" = "none",
@@ -98,7 +94,11 @@ ui <- fluidPage(
     
     # Show a plot of the generated distribution
     mainPanel(
-      plotOutput("distPlot")
+      fluidRow(
+        div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("cdwg", height = "100%", width = "100%"))),
+        div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("gcep", height = "100%", width = "100%"))),
+        div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("scid", height = "100%", width = "100%")))
+        )
     )
   )
 )

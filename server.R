@@ -2,25 +2,25 @@ library(shiny)
 library(here)
 library(ggplot2)
 library(dplyr)
+source("functions.R")
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
   
-  df <- reactive({switch(input$projection, "all" = df_all, "immunology" = df_immune, "scid" = df_scid)})
-  
+  base_list <- list("all" = df_all, "immune" = df_immune, "scid" = df_scid)
   
   # Update selectize inputs with server-side choices
   observe({
     updateSelectizeInput(session, "gene",
-                         choices = unique(df()$Gene),
+                         choices = unique(base_list$all$Gene),
                          server = TRUE)
     
     updateSelectizeInput(session, "cdwg",
-                         choices = unique(df()$CDWG),
+                         choices = unique(base_list$all$CDWG),
                          server = TRUE)
     
     updateSelectizeInput(session, "gcep",
-                         choices = unique(df()$GCEP),
+                         choices = unique(base_list$all$GCEP),
                          server = TRUE)
     
     updateSelectizeInput(session, "hpo",
@@ -29,51 +29,52 @@ server <- function(input, output, session) {
   })
   
   
-  # Highlight search
-  df_filter <- reactive({
-    base_df <- df()
-    
-    if (input$annotation == "none") {
-      return(base_df[0, ])
-    } else if (input$annotation == "gene" && !is.null(input$gene)) {
-      return(base_df %>% filter(Gene == input$gene))
-    } else if (input$annotation == "cdwg" && !is.null(input$cdwg)) {
-      return(base_df %>% filter(CDWG == input$cdwg))
-      } else if (input$annotation == "gcep" && !is.null(input$gcep)) {
-        return(base_df %>% filter(GCEP == input$gcep))
-      } else if (input$annotation == "geneSet" && !is.null(input$geneSet) && length(input$geneSet) > 0) {
-        return(base_df %>% filter(Gene %in% input$geneSet))
-      } else if (input$annotation == "hpo" && !is.null(input$hpo)) {
-        probands <- base_df %>% 
-          left_join(df_hpo, by = c("label"), relationship = "many-to-many") %>% 
-          filter(HPO == input$hpo) %>% 
-          pull(label) %>% 
-          unique()
-        return(base_df %>% filter(label %in% probands))
-      } else if (input$annotation == "pattern" && nchar(input$pattern) > 0) {
-        probands <- base_df %>% 
-          left_join(df_hpo, by = c("label"), relationship = "many-to-many") %>% 
-          filter(grepl(input$pattern, HPO_term, ignore.case = TRUE)) %>% 
-          pull(label) %>% 
-          unique()
-        return(base_df %>% filter(label %in% probands))
-      } else if (input$annotation == "iuis1") {
-        return(base_df %>% filter(Gene %in% table1_genes))
-    } else {
-      # Return empty data frame if annotation is selected but no specific value chosen
-      return(base_df[0, ])
-    }
+  filter_list <- reactive({
+    lapply(
+      base_list,
+      function(x) {filterData(
+    base_df = x,
+    annotation = input$annotation,
+    gene = input$gene,
+    cdwg = input$cdwg,
+    gcep = input$gcep,
+    geneSet = input$geneSet,
+    hpo = input$hpo,
+    pattern = input$pattern
+  )})})
+  
+  highlight_mult <- 2
+  output$cdwg <- renderPlot({
+    pt_size <- 1.5
+    ggplot(base_list$all, aes(x= V1, y = V2))+
+      geom_point(color = "grey50", size = pt_size)+
+      geom_point(data = filter_list()$all, fill = "darkorange", size = pt_size*highlight_mult, shape = 21)+
+      theme_bw() +
+      ggtitle("All ClinGen projection") +
+      labs(x = "All-UMAP1", y = "All-UMAP2") +
+      theme(plot.title = element_text(size = 18))
   })
   
-  
-  output$distPlot <- renderPlot({
-    ggplot(df(), aes(x= V1, y = V2))+
-      geom_point(color = "grey50")+
-      geom_point(data = df_filter(), fill = "darkorange", size = 3, shape = 21)+
+  output$gcep <- renderPlot({
+    pt_size <- 2
+    ggplot(base_list$immune, aes(x= V1, y = V2))+
+      geom_point(color = "grey50", size = pt_size)+
+      geom_point(data = filter_list()$immune, fill = "darkorange", size = pt_size*highlight_mult, shape = 21)+
       theme_bw() +
-      ggtitle(input$GCEP) +
-      labs(x = "UMAP1", y = "UMAP2")
-    
+      ggtitle("Immunology CDWG projection") +
+      labs(x = "Immuno-UMAP1", y = "Immuno-UMAP2") +
+      theme(plot.title = element_text(size = 18))
+  })
+  
+  output$scid <- renderPlot({
+    pt_size <- 2.5
+    ggplot(base_list$scid, aes(x= V1, y = V2))+
+      geom_point(color = "grey50", size = pt_size)+
+      geom_point(data = filter_list()$scid, fill = "darkorange", size = pt_size*highlight_mult, shape = 21)+
+      theme_bw() +
+      ggtitle("SCID GCEP projection") +
+      labs(x = "SCID-UMAP1", y = "SCID-UMAP2") +
+      theme(plot.title = element_text(size = 18))
   })
 }
 
