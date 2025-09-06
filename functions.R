@@ -42,39 +42,6 @@ filterData <- function(base_df,
 }
 
 
-
-# hpoXgeneHeatmap <- function(df, x_var, filtering_var, filter_selections, n_hpo =10, wrap_width = 40){
-#   # browser()
-#   topHPO <- df %>% 
-#     filter(.data[[filtering_var]] %in% filter_selections) %>% 
-#     slice_max(order_by = tf_idf, n = n_hpo, by = !!sym(x_var)) %>% 
-#     arrange(!!sym(x_var), desc(tf_idf)) 
-#   
-#   orderHPO <- unique(topHPO$hpo)
-#   orderVar <- unique(topHPO[[x_var]])
-#   
-#   
-#   df <- df[df$hpo %in% orderHPO, ]
-#   df <- df[df[[filtering_var]] %in% filter_selections, ]
-#   df <- df[, c(x_var, "hpo", "tf_idf")]
-#   df <- complete(df, !!sym(x_var), hpo, fill = list(tf_idf = 0))
-#   df$hpo <- factor(df$hpo, levels = rev(orderHPO))
-#   df[[x_var]] <- stringr::str_wrap(df[[x_var]], width = wrap_width)
-#   df[[x_var]] <- forcats::fct_relevel(
-#     df[[x_var]], 
-#     stringr::str_wrap(orderVar, width = wrap_width))
-#   
-#   ggplot(df, aes_string(x = x_var, y = "hpo", fill = "tf_idf"))+
-#     geom_tile()+
-#     scale_fill_viridis_c() +
-#     theme_classic()+
-#     theme(axis.text.x = element_text(angle= 90, hjust= 1)) +
-#     labs(x = NULL, y = NULL, fill = "TF-IDF")
-#   
-# }
-
-
-
 genehpoHeatmap <- function(df, x_var, y_var, filtering_var, filter_selections, top_n =10, wrap_width = 40){
   # browser()
   topYvar <- df %>% 
@@ -91,10 +58,15 @@ genehpoHeatmap <- function(df, x_var, y_var, filtering_var, filter_selections, t
   df <- df[, c(x_var, y_var, "tf_idf")]
   df <- complete(df, !!sym(x_var), !!sym(y_var), fill = list(tf_idf = 0))
   df[[y_var]] <- factor(df[[y_var]], levels = rev(orderYvar))
-  df[[x_var]] <- stringr::str_wrap(df[[x_var]], width = wrap_width)
+  # df[[x_var]] <- stringr::str_wrap(df[[x_var]], width = wrap_width)
+  df[["hpo"]] <- stringr::str_wrap(df[["hpo"]], width = wrap_width)
+  df[["geneDisease"]] <- stringr::str_wrap(df[["geneDisease"]], width = wrap_width)
   df[[x_var]] <- forcats::fct_relevel(
     df[[x_var]], 
     stringr::str_wrap(orderXvar, width = wrap_width))
+  df[[y_var]] <- forcats::fct_relevel(
+    df[[y_var]], 
+    stringr::str_wrap(rev(orderYvar), width = wrap_width))
   
   ggplot(df, aes_string(x = x_var, y = y_var, fill = "tf_idf"))+
     geom_tile()+
