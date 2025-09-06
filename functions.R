@@ -73,7 +73,8 @@ genehpoHeatmap <- function(df, x_var, y_var, filtering_var, filter_selections, t
     scale_fill_viridis_c(limits = c(0,NA)) +
     theme_classic()+
     theme(axis.text.x = element_text(angle= 90, hjust= 1)) +
-    labs(x = NULL, y = NULL, fill = "TF-IDF")
+    labs(x = NULL, y = NULL, fill = "TF-IDF") +
+    theme(text = element_text(size = 18))
 }
 
 

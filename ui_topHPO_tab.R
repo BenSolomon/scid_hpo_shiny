@@ -36,10 +36,7 @@ ui_topHPO_tab <- sidebarLayout(
                  "Top N",
                  value = 10, min = 1, max = 20, step = 1)
   ),
-  mainPanel(fluidRow(div(
-    class = "col-lg-4 col-12", div(
-      class = "plot-container",
-      plotOutput("geneHPO_tfidf", height = "100%", width = "100%")
-    )
-  )))
+  mainPanel(
+      plotOutput("geneHPO_tfidf", height = "80vh")
+  )
 )
