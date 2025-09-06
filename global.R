@@ -13,6 +13,7 @@ createProbandLabel <- function(df){
 df_all <- readRDS(here("data/umap_allClingen.RDS"))
 df_immune <- readRDS(here("data/umap_immunoCDWG.RDS"))
 df_scid <- readRDS(here("data/umap_scidGCEP.RDS"))
+df_tfidf <- readRDS(here("data/geneDisease_tfidf.R"))
 
 df_hpo <- readRDS(here("data/proband_hpo.RDS")) %>% 
   createProbandLabel() %>% 
@@ -28,3 +29,6 @@ table1_genes <- c("IL7R", "CD3D", "CD3E", "CD3Z", "PTPRC", "LAT", "FOXN1", "CORO
                   "FCHO1", "TNFRSF4", "RHOH", "CD40LG", "CD40", "DOCK2", "IFBKB", 
                   "CARD11", "BCL10", "IKKA", "REL", "IKZF1", "IKZF2", "IKZF3", 
                   "IL21R", "ICOS", "ICOSL", "MALT1", "RELB")
+
+all_genes <- sort(unique(df_all$Gene))
+all_hpo <- sort(unique(df_hpo$HPO))
