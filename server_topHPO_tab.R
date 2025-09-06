@@ -10,8 +10,23 @@ topHPO_server <- function(input, output, session) {
   })
   
   output$geneHPO_tfidf <- renderPlot({
-    df_tfidf %>% 
-      separate(geneDisease, into = c("Gene", "Disease"), sep =" - ", remove = F) %>%
-      plotHPOheatmap(filtering_var = "Gene", filter_selections = input$gene_HPO, x_var = "geneDisease")
+    if (input$enrichment == "hpoXgene"){
+      plt <- genehpoHeatmap(
+        df_tfidf,
+        filtering_var = "Gene", 
+        filter_selections = input$gene_HPO, 
+        x_var = "geneDisease",
+        y_var = "hpo",
+        top_n = as.numeric(input$topN))
+    } else if (input$enrichment == "geneXhpo"){
+      plt <- genehpoHeatmap(
+        df_tfidf,
+        filtering_var = "hpo",
+        filter_selections = input$hpo_HPO,
+        x_var = "hpo",
+        y_var = "geneDisease",
+        top_n = as.numeric(input$topN))
+    }
+    return(plt)
   })
 }

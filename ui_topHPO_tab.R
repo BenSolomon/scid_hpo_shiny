@@ -1,28 +1,45 @@
 ui_topHPO_tab <- sidebarLayout(
   sidebarPanel(
     width = 3,
-      selectizeInput("gene_HPO",
-                     "Gene:",
-                     choices = NULL,
-                     selected = NULL,
-                     multiple = TRUE,
-                     options = list(
-                       placeholder = "Type to search genes...",
-                       create = FALSE
-                     )),
-    selectizeInput("hpo_HPO",
-                   "HPO IDs:",
-                   choices = NULL,
-                   selected = NULL,
-                   multiple = TRUE,
-                   options = list(
-                     placeholder = "Type to search HPO IDs...",
-                     create = FALSE
-                   ))
+    selectInput(
+      "enrichment",
+      "Find top:",
+      choices = c("HPOs by gene" = "hpoXgene",
+                  "Genes by HPO" = "geneXhpo"),
+      selected = NULL
     ),
-  mainPanel(
-    fluidRow(
-      div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("geneHPO_tfidf", height = "100%", width = "100%")))
+    conditionalPanel(
+      condition = "input.enrichment == 'hpoXgene'",
+      selectizeInput(
+        "gene_HPO",
+        "Gene:",
+        choices = NULL,
+        selected = NULL,
+        multiple = TRUE,
+        options = list(placeholder = "Type to search genes...",
+                       create = FALSE)
+      )
+    ),
+    conditionalPanel(
+      condition = "input.enrichment == 'geneXhpo'",
+      selectizeInput(
+        "hpo_HPO",
+        "HPO IDs:",
+        choices = NULL,
+        selected = NULL,
+        multiple = TRUE,
+        options = list(placeholder = "Type to search HPO IDs...",
+                       create = FALSE)
+      )
+    ),
+    numericInput("topN",
+                 "Top N",
+                 value = 10, min = 1, max = 20, step = 1)
+  ),
+  mainPanel(fluidRow(div(
+    class = "col-lg-4 col-12", div(
+      class = "plot-container",
+      plotOutput("geneHPO_tfidf", height = "100%", width = "100%")
     )
-  )
+  )))
 )

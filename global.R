@@ -13,7 +13,10 @@ createProbandLabel <- function(df){
 df_all <- readRDS(here("data/umap_allClingen.RDS"))
 df_immune <- readRDS(here("data/umap_immunoCDWG.RDS"))
 df_scid <- readRDS(here("data/umap_scidGCEP.RDS"))
+
 df_tfidf <- readRDS(here("data/geneDisease_tfidf.R"))
+df_tfidf <- separate(df_tfidf, geneDisease, into = c("Gene", "Disease"), sep =" - ", remove = F)
+df_tfidf <- mutate(df_tfidf, hpo = gsub(" - ", " ", hpo))
 
 df_hpo <- readRDS(here("data/proband_hpo.RDS")) %>% 
   createProbandLabel() %>% 

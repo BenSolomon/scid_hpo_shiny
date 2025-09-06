@@ -43,34 +43,65 @@ filterData <- function(base_df,
 
 
 
-plotHPOheatmap <- function(df, x_var, filtering_var, filter_selections, n_hpo = 10, wrap_width = 40){
+# hpoXgeneHeatmap <- function(df, x_var, filtering_var, filter_selections, n_hpo =10, wrap_width = 40){
+#   # browser()
+#   topHPO <- df %>% 
+#     filter(.data[[filtering_var]] %in% filter_selections) %>% 
+#     slice_max(order_by = tf_idf, n = n_hpo, by = !!sym(x_var)) %>% 
+#     arrange(!!sym(x_var), desc(tf_idf)) 
+#   
+#   orderHPO <- unique(topHPO$hpo)
+#   orderVar <- unique(topHPO[[x_var]])
+#   
+#   
+#   df <- df[df$hpo %in% orderHPO, ]
+#   df <- df[df[[filtering_var]] %in% filter_selections, ]
+#   df <- df[, c(x_var, "hpo", "tf_idf")]
+#   df <- complete(df, !!sym(x_var), hpo, fill = list(tf_idf = 0))
+#   df$hpo <- factor(df$hpo, levels = rev(orderHPO))
+#   df[[x_var]] <- stringr::str_wrap(df[[x_var]], width = wrap_width)
+#   df[[x_var]] <- forcats::fct_relevel(
+#     df[[x_var]], 
+#     stringr::str_wrap(orderVar, width = wrap_width))
+#   
+#   ggplot(df, aes_string(x = x_var, y = "hpo", fill = "tf_idf"))+
+#     geom_tile()+
+#     scale_fill_viridis_c() +
+#     theme_classic()+
+#     theme(axis.text.x = element_text(angle= 90, hjust= 1)) +
+#     labs(x = NULL, y = NULL, fill = "TF-IDF")
+#   
+# }
+
+
+
+genehpoHeatmap <- function(df, x_var, y_var, filtering_var, filter_selections, top_n =10, wrap_width = 40){
   # browser()
-  topHPO <- df %>% 
+  topYvar <- df %>% 
     filter(.data[[filtering_var]] %in% filter_selections) %>% 
-    slice_max(order_by = tf_idf, n = n_hpo, by = !!sym(x_var)) %>% 
+    slice_max(order_by = tf_idf, n = top_n, by = !!sym(x_var)) %>% 
     arrange(!!sym(x_var), desc(tf_idf)) 
   
-  orderHPO <- unique(topHPO$hpo)
-  orderVar <- unique(topHPO[[x_var]])
+  orderYvar <- unique(topYvar[[y_var]])
+  orderXvar <- unique(topYvar[[x_var]])
   
   
-  df <- df[df$hpo %in% orderHPO, ]
+  df <- df[df[[y_var]] %in% orderYvar, ]
   df <- df[df[[filtering_var]] %in% filter_selections, ]
-  df <- df[, c(x_var, "hpo", "tf_idf")]
-  df <- complete(df, !!sym(x_var), hpo, fill = list(tf_idf = 0))
-  df$hpo <- factor(df$hpo, levels = rev(orderHPO))
+  df <- df[, c(x_var, y_var, "tf_idf")]
+  df <- complete(df, !!sym(x_var), !!sym(y_var), fill = list(tf_idf = 0))
+  df[[y_var]] <- factor(df[[y_var]], levels = rev(orderYvar))
   df[[x_var]] <- stringr::str_wrap(df[[x_var]], width = wrap_width)
   df[[x_var]] <- forcats::fct_relevel(
     df[[x_var]], 
-    stringr::str_wrap(orderVar, width = wrap_width))
+    stringr::str_wrap(orderXvar, width = wrap_width))
   
-  ggplot(df, aes_string(x = x_var, y = "hpo", fill = "tf_idf"))+
+  ggplot(df, aes_string(x = x_var, y = y_var, fill = "tf_idf"))+
     geom_tile()+
-    scale_fill_viridis_c() +
+    scale_fill_viridis_c(limits = c(0,NA)) +
     theme_classic()+
     theme(axis.text.x = element_text(angle= 90, hjust= 1)) +
     labs(x = NULL, y = NULL, fill = "TF-IDF")
-  
 }
 
 

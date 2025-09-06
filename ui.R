@@ -12,6 +12,6 @@ ui <- fluidPage(
   
   tabsetPanel(
   tabPanel("UMAP Projections",ui_umap_tab),
-  tabPanel("Top HPO terms", ui_topHPO_tab)
+  tabPanel("HPO Enrichment", ui_topHPO_tab)
   )
 )
