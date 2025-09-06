@@ -58,15 +58,15 @@ genehpoHeatmap <- function(df, x_var, y_var, filtering_var, filter_selections, t
   df <- df[, c(x_var, y_var, "tf_idf")]
   df <- complete(df, !!sym(x_var), !!sym(y_var), fill = list(tf_idf = 0))
   df[[y_var]] <- factor(df[[y_var]], levels = rev(orderYvar))
-  # df[[x_var]] <- stringr::str_wrap(df[[x_var]], width = wrap_width)
-  df[["hpo"]] <- stringr::str_wrap(df[["hpo"]], width = wrap_width)
-  df[["geneDisease"]] <- stringr::str_wrap(df[["geneDisease"]], width = wrap_width)
-  df[[x_var]] <- forcats::fct_relevel(
-    df[[x_var]], 
-    stringr::str_wrap(orderXvar, width = wrap_width))
-  df[[y_var]] <- forcats::fct_relevel(
-    df[[y_var]], 
-    stringr::str_wrap(rev(orderYvar), width = wrap_width))
+  
+  # df[["hpo"]] <- stringr::str_wrap(df[["hpo"]], width = wrap_width)
+  # df[["geneDisease"]] <- stringr::str_wrap(df[["geneDisease"]], width = wrap_width)
+  # df[[x_var]] <- forcats::fct_relevel(
+  #   df[[x_var]], 
+  #   stringr::str_wrap(orderXvar, width = wrap_width))
+  # df[[y_var]] <- forcats::fct_relevel(
+  #   df[[y_var]], 
+  #   stringr::str_wrap(rev(orderYvar), width = wrap_width))
   
   ggplot(df, aes_string(x = x_var, y = y_var, fill = "tf_idf"))+
     geom_tile()+

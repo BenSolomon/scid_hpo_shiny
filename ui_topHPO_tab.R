@@ -18,7 +18,8 @@ ui_topHPO_tab <- sidebarLayout(
         multiple = TRUE,
         options = list(placeholder = "Type to search genes...",
                        create = FALSE)
-      )
+      ),
+      helpText("Can select multiple. To remove selection, click and press delete.")
     ),
     conditionalPanel(
       condition = "input.enrichment == 'geneXhpo'",
@@ -30,11 +31,13 @@ ui_topHPO_tab <- sidebarLayout(
         multiple = TRUE,
         options = list(placeholder = "Type to search HPO IDs...",
                        create = FALSE)
-      )
+      ),
+      helpText("Can select multiple. To remove selection, click and press delete.")
     ),
     numericInput("topN",
                  "Top N",
-                 value = 10, min = 1, max = 20, step = 1)
+                 value = 10, min = 1, max = 20, step = 1),
+    helpText("Number of top HPO terms or genes to display")
   ),
   mainPanel(
       plotOutput("geneHPO_tfidf", height = "80vh")

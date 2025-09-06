@@ -12,6 +12,8 @@ ui_umap_tab <- sidebarLayout(
                                        "HPO pattern" = "pattern",
                                        "IUIS table 1" = "iuis1"),
                            selected = "None"),
+               helpText("Type of data to highlight probands by"),
+               
                
                # Conditional Gene input
                conditionalPanel(
@@ -23,7 +25,8 @@ ui_umap_tab <- sidebarLayout(
                                 options = list(
                                   placeholder = "Type to search genes...",
                                   create = FALSE
-                                ))
+                                )),
+                 helpText("Highlight all probands with variant in selected gene")
                ),
                # Conditional CDWG input
                conditionalPanel(
@@ -35,7 +38,8 @@ ui_umap_tab <- sidebarLayout(
                                 options = list(
                                   placeholder = "Type to search genes...",
                                   create = FALSE
-                                ))
+                                )),
+                 helpText("Highlight all probands with gene variants from a specific ClinGen CDWG")
                ),
                # Conditional CDWG input
                conditionalPanel(
@@ -47,7 +51,8 @@ ui_umap_tab <- sidebarLayout(
                                 options = list(
                                   placeholder = "Type to search genes...",
                                   create = FALSE
-                                ))
+                                )),
+                 helpText("Highlight all probands with gene variants from a specific ClinGen GCEP")
                ),
                conditionalPanel(
                  condition = "input.annotation == 'geneSet'",
@@ -60,14 +65,16 @@ ui_umap_tab <- sidebarLayout(
                                   placeholder = "Type genes separated by commas...",
                                   create = TRUE,
                                   persist = FALSE
-                                ))
+                                )),
+                 helpText("Highlight all probands with variant in selected gene. Can select multiple. To remove selection, click and press delete.")
                ),
                conditionalPanel(
                  condition = "input.annotation == 'pattern'",
                  textInput("pattern",
                            "HPO Pattern Search:",
                            value = NULL,
-                           placeholder = "Enter text to search within HPO terms...")
+                           placeholder = "Enter text to search within HPO terms..."),
+                 helpText("Highlight all probands with HPO terms containing pattern")
                ),
                conditionalPanel(
                  condition = "input.annotation == 'hpo'",
@@ -78,7 +85,8 @@ ui_umap_tab <- sidebarLayout(
                                 options = list(
                                   placeholder = "Type to search HPO IDs...",
                                   create = FALSE
-                                ))
+                                )),
+                 helpText("Highlight all probands with selected HPO terms")
                )
   ),
   
