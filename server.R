@@ -4,7 +4,6 @@ library(ggplot2)
 library(dplyr)
 source("server_umap_tab.R")
 source("server_topHPO_tab.R")
-source("server_test.R")
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
