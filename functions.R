@@ -77,5 +77,11 @@ genehpoHeatmap <- function(df, x_var, y_var, filtering_var, filter_selections, t
     theme(text = element_text(size = 18))
 }
 
+getHeatmapDimensions <- function(plot){
+  data <- ggplot_build(plot)$data[[1]]
+  x <- length(unique(data$x))
+  y <- length(unique(data$y))
+  return(list("x"=x,"y"=y))
+}
 
 

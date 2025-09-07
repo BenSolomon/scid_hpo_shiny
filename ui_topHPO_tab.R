@@ -40,6 +40,6 @@ ui_topHPO_tab <- sidebarLayout(
     helpText("Number of top HPO terms or genes to display")
   ),
   mainPanel(
-      plotOutput("geneHPO_tfidf", height = "80vh")
+    uiOutput("geneHPO_tfidf")
   )
 )

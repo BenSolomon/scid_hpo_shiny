@@ -9,7 +9,8 @@ topHPO_server <- function(input, output, session) {
                          server = TRUE)
   })
   
-  output$geneHPO_tfidf <- renderPlot({
+  output$geneHPO_tfidf <- renderUI({
+    # Create the plot and get the data for dimension calculations
     if (input$enrichment == "hpoXgene"){
       plt <- genehpoHeatmap(
         df_tfidf,
@@ -27,6 +28,26 @@ topHPO_server <- function(input, output, session) {
         y_var = "geneDisease",
         top_n = as.numeric(input$topN))
     }
-    return(plt)
+    
+    heatmap_dim <- getHeatmapDimensions(plt)
+    
+    # print("Debug heatmap_dim:")
+    # print(heatmap_dim)
+    # print(paste("y value:", heatmap_dim$y))
+    # print(paste("y*100:", heatmap_dim$y*100))
+    # print(paste("sprintf result:", sprintf("%spx", heatmap_dim$y*100)))
+    
+    # Store the plot in a reactive value or return it directly
+    output$heatmap <- renderPlot({ plt })
+    
+    X <- "80vw"
+    
+    if (heatmap_dim$y == 0){
+      Y <- "80vh"
+    } else {
+      Y <- sprintf("%spx", (heatmap_dim$y*40))
+    }
+    
+    plotOutput("heatmap", width = X, height = Y)
   })
 }
