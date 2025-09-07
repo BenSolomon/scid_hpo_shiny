@@ -40,7 +40,7 @@ topHPO_server <- function(input, output, session) {
     # Store the plot in a reactive value or return it directly
     output$heatmap <- renderPlot({ plt })
     
-    X <- "80vw"
+    X <- "70vw"
     
     if (heatmap_dim$y == 0){
       Y <- "80vh"
