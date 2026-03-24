@@ -13,6 +13,7 @@ createProbandLabel <- function(df){
 df_all <- readRDS(here("data/umap_allClingen.RDS"))
 df_immune <- readRDS(here("data/umap_immunoCDWG.RDS"))
 df_scid <- readRDS(here("data/umap_scidGCEP.RDS"))
+df_pird <- readRDS(here("data/umap_pirdGCEP.RDS"))
 
 df_tfidf <- readRDS(here("data/geneDisease_tfidf.R"))
 df_tfidf <- separate(df_tfidf, geneDisease, into = c("Gene", "Disease"), sep =" - ", remove = F)

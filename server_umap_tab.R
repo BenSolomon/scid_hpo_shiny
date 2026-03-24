@@ -1,7 +1,8 @@
 source("functions.R")
 umap_server <- function(input, output, session) {
   
-  base_list <- list("all" = df_all, "immune" = df_immune, "scid" = df_scid)
+  base_list <- list("all" = df_all, "immune" = df_immune, 
+                    "scid" = df_scid, "pird" = df_pird)
   
   # Update selectize inputs with server-side choices
   observe({
@@ -62,12 +63,23 @@ umap_server <- function(input, output, session) {
   
   output$scid <- renderPlot({
     pt_size <- 2.5
-    ggplot(base_list$scid, aes(x= V1, y = V2))+
+    ggplot(base_list$pird, aes(x= V1, y = V2))+
       geom_point(color = "grey50", size = pt_size)+
       geom_point(data = filter_list()$scid, fill = "darkorange", size = pt_size*highlight_mult, shape = 21)+
       theme_bw() +
       ggtitle("SCID GCEP projection") +
       labs(x = "SCID-UMAP1", y = "SCID-UMAP2") +
+      theme(plot.title = element_text(size = 18))
+  })
+  
+  output$pird <- renderPlot({
+    pt_size <- 2.5
+    ggplot(base_list$scid, aes(x= V1, y = V2))+
+      geom_point(color = "grey50", size = pt_size)+
+      geom_point(data = filter_list()$pird, fill = "darkorange", size = pt_size*highlight_mult, shape = 21)+
+      theme_bw() +
+      ggtitle("PIRD GCEP projection") +
+      labs(x = "PIRD-UMAP1", y = "PIRD-UMAP2") +
       theme(plot.title = element_text(size = 18))
   })
 }

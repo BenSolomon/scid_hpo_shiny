@@ -93,9 +93,12 @@ ui_umap_tab <- sidebarLayout(
   # Show a plot of the generated distribution
   mainPanel(
     fluidRow(
-      div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("cdwg", height = "100%", width = "100%"))),
-      div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("gcep", height = "100%", width = "100%"))),
-      div(class = "col-lg-4 col-12", div(class = "plot-container", plotOutput("scid", height = "100%", width = "100%")))
+      div(class = "col-lg-6 col-12", div(class = "plot-container", plotOutput("cdwg", height = "100%", width = "100%"))),
+      div(class = "col-lg-6 col-12", div(class = "plot-container", plotOutput("gcep", height = "100%", width = "100%")))
+    ),
+    fluidRow(
+      div(class = "col-lg-6 col-12", div(class = "plot-container", plotOutput("scid",  height = "100%", width = "100%"))),
+      div(class = "col-lg-6 col-12", div(class = "plot-container", plotOutput("pird", height = "100%", width = "100%")))
     )
   )
 )

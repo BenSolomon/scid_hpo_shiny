@@ -6,7 +6,7 @@ source("ui_topHPO_tab.R")
 ui <- fluidPage(
   
   # Application title
-  titlePanel("SCID HPO Data"),
+  titlePanel("IEI HPO Data"),
   
   includeCSS("www/custom.css"),
   
